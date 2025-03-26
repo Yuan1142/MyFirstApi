@@ -10,6 +10,6 @@ public class SaleController {
 
     @GetMapping
     public String sale() {
-        return "Chicharrones";
+        return "Chicharones";
     }
 }
