@@ -1,55 +1,141 @@
 package co.edu.umanizales.myfirstapi.service;
 
-import co.edu.umanizales.myfirstapi.model.Departamentos;
-import co.edu.umanizales.myfirstapi.model.Municipios;
+import co.edu.umanizales.myfirstapi.model.Location;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
 @Service
+@Getter
 public class LocationService {
-    private final Map<String, Departamentos> departments = new HashMap<>();
 
-    @co.edu.umanizales.myfirstapi.service.PostConstruct
-    public void loadLocations() {
-        try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Divipola.csv"); // "D" mayúscula
-            if (inputStream == null) {
-                throw new RuntimeException("Archivo Divipola.csv no encontrado");
-            }
+    private List<Location> locations;
+    private List<Location> departmentLocation;
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+    @Value("${locations_filename}")
+    private String locationsFilename;
+
+    @PostConstruct
+    public void readLocationsFromCSV() throws IOException, URISyntaxException {
+        locations = new ArrayList<>();
+        departmentLocation = new ArrayList<>();
+        locations.add(new Location("05", "ANTIOQUIA"));
+        locations.add(new Location("17", "CALDAS"));
+        locations.add(new Location("66", "RISARALDA"));
+
+        Path pathFile = Paths.get(ClassLoader.getSystemResource(locationsFilename).toURI());
+
+        try (BufferedReader br = new BufferedReader(new FileReader(pathFile.toString()))) {
+
+            String[] data;
+            String code, description;
+
+            String DepartmentCode, DepartmentDescription;
+
             String line;
             boolean firstLine = true;
 
-            while ((line = reader.readLine()) != null) {
-                if (firstLine) { // Saltar la primera línea (encabezado)
+
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
                     firstLine = false;
                     continue;
                 }
-                String[] data = line.split(",");
 
-                String departmentCode = data[0];
-                String departmentName = data[1];
-                String municipalityCode = data[2];
-                String municipalityName = data[3];
-                boolean isCapital = data[4].equals("1");
+                data = line.split(",");
+                code = data[2];
+                description = data[3];
+                locations.add(new Location(code, description));
 
-                departments.putIfAbsent(departmentCode, new Departamentos(departmentCode, departmentName));
+                DepartmentCode = data[0];
+                DepartmentDescription = data[1];
+                departmentLocation.add(new Location(DepartmentCode, DepartmentDescription));
 
-                Municipios municipality = new Municipios(municipalityCode, municipalityName, isCapital);
-                departments.get(departmentCode).addMunicipality(municipality);
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw e;  // Lanza la excepción para que pueda manejarse en la capa superior si es necesario
         }
     }
 
+    public Location getLocationByCode(String code) {
+        for (Location location : locations) {
+            if (location.getCode().equals(code)) {
+                return location;
+            }
+        }
+        return null;
+    }
+
+    public List<Location> getStates() {
+        List<Location> states = new ArrayList<>();
+        for (Location location : locations) {
+            if (location.getCode().length() == 2) {
+                states.add(location);
+            }
+        }
+        return states;
+    }
+
+    public List<Location> GetLocations() {
+        return locations;
+    }
+
+    public List<Location> getLocationsByName(String name) {
+        List<Location> results = new ArrayList<>();
+        for (Location location : locations) {
+            if (location.getDescription().equalsIgnoreCase(name)) {
+                results.add(location);
+            }
+        }
+        return results;
+    }
+
+    public List<Location> getAllDepartments() {
+        List<Location> results = new ArrayList<>();
+        for (Location dLocation : departmentLocation) {
+            if (dLocation.getCode().length() == 2) {
+                results.add(dLocation);
+            }
+
+        }
+        return results;
+    }
+
+    public List<Location> getAllLocations() {
+        List<Location> results = new ArrayList<>();
+        for (Location location : locations) {
+            results.add(location);
+        }
+        return results;
+    }
+
+    public List<Location> getLocationByDepartmentCode(String departmentCode) {
+        List<Location> results = new ArrayList<>();
+        for (Location dlocation : departmentLocation) {
+            results.add(dlocation);
+        }
+        return results;
+    }
+
+    public List<Location> getLocationsByDepartment(String department) {
+        List<Location> results = new ArrayList<>();
+        for (Location location : locations) {
+            if (location.getDescription().equalsIgnoreCase(department)) {
+                results.add(location);
+            }
+        }
+        return results;
+    }
 }
