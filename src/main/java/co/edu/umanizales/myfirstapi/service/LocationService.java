@@ -15,6 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Service
 @Getter
@@ -138,4 +140,50 @@ public class LocationService {
         }
         return results;
     }
+
+    /*
+
+    Hacer un mét0do que devuelva todos los departamentos y sus
+    respectivas capitales
+
+    tipoDeAcceso TipoDeRetorno NormbreMét0do(parámetro)
+
+    public List<Location> obtenerLocalidadesPorDepartamentoConCapital()
+        List<Location> results = new ArrayList<>();
+        for (Location l : locations) {
+            if (l.getCode().startsWith(departmentCode)) && l.getCode().endsWith("001")) {
+                results.add(l);
+            }
+        }
+        return results;
+    }
+     */
+
+
+    public List<String> getDepartmentsWithCapitals() {
+        List<String> result = new ArrayList<>();
+        Set<String> processedDepartments = new HashSet<>();
+
+        for (Location department : departmentLocation) {
+            String depCode = department.getCode();
+
+            if (!processedDepartments.contains(depCode) && depCode.length() == 2) {
+                processedDepartments.add(depCode);
+                result.add(depCode + " " + department.getDescription());
+
+                for (Location location : locations) {
+                    if (location.getCode().equals(depCode + "001")) {
+                        result.add(location.getCode() + " " + location.getDescription());
+                        break;
+                    }
+                }
+
+                result.add("");
+            }
+        }
+
+        return result;
+    }
+
+
 }

@@ -58,4 +58,8 @@ public class LocationController {
     public List<Location> getAllDepartments() {
         return locationService.getAllDepartments();
     }
+    @GetMapping(path = "/departmentWithCapital")
+    public List<String> getDepartmentWithCapital() {
+        return locationService.getDepartmentsWithCapitals();
+    }
 }

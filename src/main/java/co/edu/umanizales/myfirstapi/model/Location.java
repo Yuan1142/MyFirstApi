@@ -14,7 +14,4 @@ public class Location {
     private String code;
     private String description;
 
-    public Location() {
-
-    }
 }
