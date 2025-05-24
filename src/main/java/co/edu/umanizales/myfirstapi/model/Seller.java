@@ -1,22 +1,43 @@
 package co.edu.umanizales.myfirstapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@Getter
-@Setter
-@AllArgsConstructor
-
 public class Seller {
-
     private String identification;
+    private TypeDoc typeDoc;
     private String name;
     private String lastName;
-    private String gender;
-    private String age;
-    private String city;
+    private byte age;
+    private Location city;
+
+    public Seller(String identification, TypeDoc typeDoc, String name, String lastName, byte age, Location city) {
+        this.identification = identification;
+        this.typeDoc = typeDoc;
+        this.name = name;
+        this.lastName = lastName;
+        this.age = age;
+        this.city = city;
+    }
+
+    public String getIdentification() {
+        return identification;
+    }
+
+    public TypeDoc getTypeDoc() {
+        return typeDoc;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public byte getAge() {
+        return age;
+    }
+
+    public Location getCity() {
+        return city;
+    }
 }

@@ -1,17 +1,31 @@
 package co.edu.umanizales.myfirstapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-@Data
-@Getter
-@Setter
-@AllArgsConstructor
 public class Store {
-    private String nombreTienda;
-    private String codigoTienda;
-    private String direccionTienda;
-    private Location Ciudad;
+    private String code;
+    private String name;
+    private String address;
+    private Location city;
+
+    public Store(String code, String name, String address, Location city) {
+        this.code = code;
+        this.name = name;
+        this.address = address;
+        this.city = city;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Location getCity() {
+        return city;
+    }
 }

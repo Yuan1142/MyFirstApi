@@ -2,25 +2,18 @@ package co.edu.umanizales.myfirstapi.controler;
 
 import co.edu.umanizales.myfirstapi.model.Store;
 import co.edu.umanizales.myfirstapi.service.StoreService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/stores")
+
 public class StoreController {
+    private StoreService storeService = new StoreService();
 
-    @Autowired
-    private StoreService storeService;
-
-    @GetMapping
-    public List<Store> getAllStores() {
-        return storeService.getAllStores();
+    public void addStore(Store store) {
+        storeService.addStore(store);
     }
 
-    @GetMapping(path = "/name/{name}")
-    public Store getStoreByName(@PathVariable String name) {
-        return storeService.getStoreByName(name);
+    public List<Store> getStores() {
+        return storeService.getStores();
     }
 }

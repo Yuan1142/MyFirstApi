@@ -1,15 +1,18 @@
 package co.edu.umanizales.myfirstapi.controler;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import co.edu.umanizales.myfirstapi.model.Seller;
+import co.edu.umanizales.myfirstapi.service.SellerService;
 
-@RestController
-@RequestMapping(path = "/seller")
+import java.util.List;
+
 public class SellerController {
+    private SellerService sellerService = new SellerService();
 
-    @GetMapping
-    public String seller() {
-        return "Matias";
+    public void addSeller(Seller seller) {
+        sellerService.addSeller(seller);
+    }
+
+    public List<Seller> getSellers() {
+        return sellerService.getSellers();
     }
 }
